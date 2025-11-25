@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEMOD v3.2 – Complete Healing Station</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR-ID"></script>
+<style>
+    body{font-family:'Segoe UI',sans-serif;background:#0b0e17;color:#e0e0ff;margin:0;padding:20px;line-height:1.6}
+    .container{max-width:1200px;margin:auto;display:grid;grid-template-columns:1fr 340px;gap:30px}
+    .main{background:rgba(20,25,40,0.9);padding:30px;border-radius:15px}
+    h1{color:#00ffea;text-align:center;text-shadow:0 0 20px #00ffea}
+    .nemod{background:#111;padding:35px;border-radius:15px;text-align:center;border:2px solid #00ffea;margin-bottom:30px}
+    #freq{font-size:5em;color:#00ffea;text-shadow:0 0 20px #00ffea;margin:10px 0}
+    #status{font-size:1.5em;color:#00ffea;margin:15px}
+    label{color:#a0f0ff;font-weight:bold;margin-top:15px;display:block}
+    input[type=range]{width:90%;height:40px;background:#003340;border-radius:20px}
+    button{background:#00ffea;color:#000;padding:14px 30px;border:none;border-radius:12px;font-size:1.2em;margin:10px;cursor:pointer}
+    button:hover{background:#ff00aa;color:#fff}
+    .vol-label{color:#00ffea;font-size:1.1em;margin:10px 0}
+    .section{background:#002233;padding:25px;border-radius:12px;margin-top:30px}
+    .instructions{background:#001122;padding:25px;border-radius:12px;margin:30px 0;border:1px solid #00ffea}
+    .linkbtn{background:#ff00aa;color:#fff;padding:18px;margin:30px auto;display:block;width:340px;border-radius:15px;text-align:center;text-decoration:none;font-size:1.4em}
+    .preset-btn{background:#003340;margin:6px;padding:12px 20px;display:inline-block;border-radius:8px;cursor:pointer}
+    .preset-btn:hover{background:#00ffea;color:#000}
+    @media(max-width:768px){.container{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="main">
+    <h1>NEMOD v3.2</h1>
+    <p style="text-align:center;font-size:1.4em;color:#a0f0ff">Open-Source Frequency Healing Station • 2025</p>
+
+    <div class="instructions">
+      <h2 style="color:#00ffea">First Time Here? Welcome!</h2>
+      <p>This free tool plays pure healing tones that many people use for relaxation, meditation, and experimental wellness. Simply:</p>
+      <ol style="text-align:left;max-width:700px;margin:auto">
+        <li>Choose a preset below (nano-detox, solfeggio, etc.)</li>
+        <li>Adjust the sliders to find your perfect volume balance</li>
+        <li>Press START — use headphones or speakers</li>
+        <li>Relax and breathe — sessions auto-stop after 20 minutes for safety</li>
+      </ol>
+      <p>No medical claims are made. Use at your own discretion and enjoy the resonance!</p>
+      <p>The Masking track is any audio file you may enjoy balancing with any of the tones. So far, I prefer MP3. You may test a .wav if you'd like.</p>
+    </div>
+
+    <div class="nemod">
+      <div id="freq">0</div> Hz
+      <div id="status">Ready</div>
+
+      <label>Upload Masking Track (optional)</label>
+      <input type="file" id="maskFile" accept="audio/*">
+
+      <div class="vol-label">Tone Volume</div>
+      <input type="range" id="volTone" min="0" max="100" value="45">
+
+      <div class="vol-label">Masking Track Volume</div>
+      <input type="range" id="volMask" min="0" max="100" value="70">
+
+      <input type="range" id="slider" min="0" max="4000" value="0" step="1"><br><br>
+
+      <button onclick="toggle()">START / STOP</button>
+      <button onclick="startLoop()" style="background:#ff00aa">AUTO-LOOP (20 min each)</button>
+    </div>
+
+    <div class="section">
+      <h2>Nano-Extraction Presets</h2>
+      <div id="nanoBank"></div>
+    </div>
+
+    <div class="section">
+      <h2>Solfeggio Healing Frequencies</h2>
+      <div id="solfBank"></div>
+    </div>
+
+    <div style="text-align:center;margin:50px 0">
+      <a href="https://nemod.life/monatomic/" class="linkbtn">
+        Monatomic Gold Therapy<br><small>(Password hint: gold + 33)</small>
+      </a>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+</div>
+
+<script>
+const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+let osc, maskSource, toneGain, maskGain, running = false, loopInterval = null;
+let maskAudioBuffer = null;
+
+// FIXED: Removed the extra array wrapper
+const nanoCycle = [
+  {name:"Graphene Oxide",freq:2400},
+  {name:"Aluminum Oxide",freq:2550},
+  {name:"mRNA LNPs",freq:3150},
+  {name:"Spike Structures",freq:3360},
+  {name:"Heavy Metals",freq:2700}
+];
+
+const solfeggio = [
+  {name:"174 Hz – Pain Relief",freq:174},
+  {name:"285 Hz – Tissue Repair",freq:285},
+  {name:"396 Hz – Liberate Fear",freq:396},
+  {name:"417 Hz – Undo Situations",freq:417},
+  {name:"528 Hz – DNA Repair",freq:528},
+  {name:"639 Hz – Relationships",freq:639},
+  {name:"741 Hz – Expression",freq:741},
+  {name:"852 Hz – Intuition",freq:852},
+  {name:"963 Hz – Higher Order",freq:963}
+];
+
+document.getElementById('maskFile').onchange = e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev=>audioCtx.decodeAudioData(ev.target.result).then(b=>{maskAudioBuffer=b;document.getElementById('status').textContent="Mask Loaded";});
+  reader.readAsArrayBuffer(file);
+};
+
+function setFreq(f){
+  document.getElementById('slider').value = f;
+  document.getElementById('freq').textContent = f;
+  if(running) osc.frequency.setValueAtTime(f,audioCtx.currentTime);
+}
+
+function start(freq = parseInt(document.getElementById('slider').value)){
+  if(running) stop();
+  running = true;
+  document.getElementById('status').textContent = "Playing "+freq+" Hz";
+
+  osc = audioCtx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  toneGain = audioCtx.createGain();
+  toneGain.gain.value = document.getElementById('volTone').value / 100 * 0.45;
+  osc.connect(toneGain).connect(audioCtx.destination);
+  osc.start();
+
+  if(maskAudioBuffer){
+    maskSource = audioCtx.createBufferSource();
+    maskSource.buffer = maskAudioBuffer;
+    maskSource.loop = true;
+    maskGain = audioCtx.createGain();
+    maskGain.gain.value = document.getElementById('volMask').value / 100 * 0.7;
+    maskSource.connect(maskGain).connect(audioCtx.destination);
+    maskSource.start();
+  }
+}
+
+function stop(){
+  if(osc) osc.stop();
+  if(maskSource) maskSource.stop();
+  running = false;
+  document.getElementById('status').textContent = 'Ready';
+}
+
+function toggle(){ running?stop():start(); }
+
+function startLoop(){
+  if(loopInterval) clearInterval(loopInterval);
+  let i=0;
+  document.getElementById('status').textContent = `Auto-Loop: ${nanoCycle[i].name}`;
+  start(nanoCycle[i].freq);
+  loopInterval = setInterval(()=>{
+    i=(i+1)%nanoCycle.length;
+    document.getElementById('status').textContent = `Auto-Loop: ${nanoCycle[i].name}`;
+    start(nanoCycle[i].freq);
+  },20*60*1000);
+}
+
+// Volume control
+document.getElementById('volTone').oninput = e=>{ if(toneGain) toneGain.gain.value = e.target.value/100*0.45; }
+document.getElementById('volMask').oninput = e=>{ if(maskGain) maskGain.gain.value = e.target.value/100*0.7; }
+
+// Slider display
+document.getElementById('slider').oninput = e=>{
+  document.getElementById('freq').textContent = parseInt(e.target.value);
+  if(running && !loopInterval) osc.frequency.setValueAtTime(parseInt(e.target.value),audioCtx.currentTime);
+};
+
+// Populate presets (NOW WORKING!)
+nanoCycle.forEach(p=>{
+  let b=document.createElement('button');
+  b.className='preset-btn';
+  b.textContent=p.name;
+  b.onclick=()=>setFreq(p.freq);
+  document.getElementById('nanoBank').appendChild(b);
+});
+solfeggio.forEach(p=>{
+  let b=document.createElement('button');
+  b.className='preset-btn';
+  b.textContent=p.name;
+  b.onclick=()=>setFreq(p.freq);
+  document.getElementById('solfBank').appendChild(b);
+});
+</script>
+</body>
+</html>
