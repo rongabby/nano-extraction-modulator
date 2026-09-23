@@ -28,16 +28,21 @@
     .listen-bar{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px 0 10px}
     .listen-btn{background:#1a3344;color:#00ffea;border:2px solid #00ffea;padding:12px 22px;border-radius:12px;font-size:1.05em;cursor:pointer}
     .listen-btn:hover,.listen-btn:focus{background:#00ffea;color:#000;outline:none}
+    .listen-btn{flex:1 1 150px;min-width:0;margin:0}
     .listen-btn.rock{border-color:#ff6b9d;color:#ffb3c9}
     .listen-btn.rock:hover,.listen-btn.rock:focus{background:#ff6b9d;color:#000}
+    .listen-btn.cosmic{border-color:#b58cff;color:#d7c7ff}
+    .listen-btn.cosmic:hover,.listen-btn.cosmic:focus{background:#b58cff;color:#000}
     .listen-hint{text-align:center;color:#8ab;font-size:0.95em;max-width:640px;margin:8px auto 0}
 
     /* Sticky side tabs (desktop) */
     .side-tabs{position:fixed;right:0;top:40%;z-index:40;display:flex;flex-direction:column;gap:8px}
     .side-tab{writing-mode:vertical-rl;transform:rotate(180deg);background:#111c28;color:#00ffea;border:2px solid #00ffea;border-right:none;border-radius:12px 0 0 12px;padding:14px 10px;cursor:pointer;font-weight:600;font-size:0.95em}
     .side-tab.rock{color:#ffb3c9;border-color:#ff6b9d}
+    .side-tab.cosmic{color:#d7c7ff;border-color:#b58cff}
     .side-tab:hover{background:#00ffea;color:#000}
     .side-tab.rock:hover{background:#ff6b9d;color:#000}
+    .side-tab.cosmic:hover{background:#b58cff;color:#000}
 
     /* Drawer + backdrop */
     .drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:90;opacity:0;pointer-events:none;transition:opacity .25s ease}
@@ -52,9 +57,6 @@
     .drawer-tip{background:#001122;border:1px solid #1e4a5a;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:0.92em;color:#a0d0e0}
     .drawer-iframe-wrap{flex:1;min-height:280px;border-radius:10px;overflow:hidden;border:1px solid #1e3a4a;background:#000;position:relative}
     .drawer-iframe-wrap iframe{width:100%;height:100%;border:0;display:block;min-height:320px}
-    .drawer-tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-    .drawer-tab{background:#003340;color:#a0f0ff;border:1px solid #1e4a5a;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:0.95em}
-    .drawer-tab.active,.drawer-tab:hover{background:#00ffea;color:#000;border-color:#00ffea}
     .drawer-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:28px 16px;min-height:280px}
     .drawer-fallback.show{display:flex}
     .drawer-fallback p{margin:0;color:#a0d0e0;max-width:340px}
@@ -77,6 +79,7 @@
 <div class="side-tabs" aria-hidden="false">
   <button type="button" class="side-tab" data-open-drawer="calm" title="Open Calm Radio">Calm Radio</button>
   <button type="button" class="side-tab rock" data-open-drawer="rock" title="Open Rock U">Rock U</button>
+  <button type="button" class="side-tab cosmic" data-open-drawer="cosmic" title="Open Cosmic Radio">Cosmic Radio</button>
 </div>
 
 <div class="container">
@@ -91,7 +94,7 @@
         <li>Choose a preset below (nano-detox, solfeggio, etc.)</li>
         <li>Adjust the sliders to find your perfect volume balance</li>
         <li>Press START — use headphones or speakers</li>
-        <li>Optionally open <strong>Calm Radio</strong> or <strong>Rock U</strong> for parallel listening / masking while tones play</li>
+        <li>Optionally open <strong>Calm Radio</strong>, <strong>Rock U</strong>, or <strong>Cosmic Radio</strong> for parallel listening / masking while tones play</li>
         <li>Relax and breathe — sessions auto-stop after 20 minutes for safety</li>
       </ol>
       <p>No medical claims are made. Use at your own discretion and enjoy the resonance!</p>
@@ -119,6 +122,7 @@
       <div class="listen-bar">
         <button type="button" class="listen-btn" data-open-drawer="calm">Calm Radio</button>
         <button type="button" class="listen-btn rock" data-open-drawer="rock">Rock U</button>
+        <button type="button" class="listen-btn cosmic" data-open-drawer="cosmic">Cosmic Radio</button>
       </div>
       <p class="listen-hint">Open a drawer to listen alongside NEMOD tones. Use each player’s volume (and NEMOD’s Tone Volume) so music sits gently under the tone. Browser autoplay rules may need a click inside the drawer to start audio.</p>
     </div>
@@ -180,16 +184,29 @@
   </div>
   <div class="drawer-body">
     <div class="drawer-tip">
-      Use Rock U’s own volume slider to duck music under the NEMOD tone. A click inside the player may be needed to start audio. Cosmic Radio is available as a second tab below.
-    </div>
-    <div class="drawer-tabs" role="tablist">
-      <button type="button" class="drawer-tab active" role="tab" aria-selected="true" data-rock-src="https://www.rockuunderstanding.online/">Rock U catalog</button>
-      <button type="button" class="drawer-tab" role="tab" aria-selected="false" data-rock-src="https://www.rockuunderstanding.online/radio">Cosmic Radio</button>
+      Use Rock U’s own volume slider to duck the catalog under the NEMOD tone. A click inside the player may be needed to start audio.
     </div>
     <div class="drawer-iframe-wrap">
       <iframe id="rock-iframe" title="Rock U" loading="lazy" allow="autoplay; encrypted-media" src="about:blank"></iframe>
     </div>
     <p style="margin-top:10px;font-size:0.85em"><a class="ext-link" href="https://www.rockuunderstanding.online/" target="_blank" rel="noopener noreferrer">rockuunderstanding.online ↗</a></p>
+  </div>
+</aside>
+
+<!-- Cosmic Radio drawer -->
+<aside class="drawer" id="drawer-cosmic" role="dialog" aria-modal="true" aria-labelledby="cosmic-title" hidden>
+  <div class="drawer-header">
+    <h2 id="cosmic-title">Cosmic Radio</h2>
+    <button type="button" class="drawer-close" data-close-drawer aria-label="Close">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-tip">
+      Ronnie’s Cosmic Radio, alongside NEMOD. Use the station’s own volume control to balance it under the tone. A click inside the player may be needed to start audio.
+    </div>
+    <div class="drawer-iframe-wrap">
+      <iframe id="cosmic-iframe" title="Cosmic Radio" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="no-referrer-when-downgrade" src="about:blank"></iframe>
+    </div>
+    <p style="margin-top:10px;font-size:0.85em"><a class="ext-link" href="https://www.rockuunderstanding.online/radio" target="_blank" rel="noopener noreferrer">Cosmic Radio ↗</a></p>
   </div>
 </aside>
 
@@ -305,13 +322,16 @@ solfeggio.forEach(p=>{
 /* ===== Radio drawers (do not touch Web Audio paths) ===== */
 const CALM_URL = 'https://www.calmradio.com/';
 const ROCK_URL = 'https://www.rockuunderstanding.online/';
+const COSMIC_URL = 'https://www.rockuunderstanding.online/radio';
 const drawers = {
   calm: document.getElementById('drawer-calm'),
-  rock: document.getElementById('drawer-rock')
+  rock: document.getElementById('drawer-rock'),
+  cosmic: document.getElementById('drawer-cosmic')
 };
 const backdrop = document.getElementById('drawerBackdrop');
 const calmIframe = document.getElementById('calm-iframe');
 const rockIframe = document.getElementById('rock-iframe');
+const cosmicIframe = document.getElementById('cosmic-iframe');
 const calmFallback = document.getElementById('calm-fallback');
 const calmWrap = document.getElementById('calm-iframe-wrap');
 let openDrawerId = null;
@@ -390,6 +410,11 @@ function openDrawer(id){
       tryLoadCalm();
     }
   }
+  if(id === 'cosmic'){
+    if(!cosmicIframe.src || cosmicIframe.src === 'about:blank' || cosmicIframe.getAttribute('src') === 'about:blank'){
+      cosmicIframe.src = COSMIC_URL;
+    }
+  }
 
   const closeBtn = el.querySelector('[data-close-drawer]');
   if(closeBtn) closeBtn.focus();
@@ -406,15 +431,6 @@ document.addEventListener('keydown', e=>{
   if(e.key === 'Escape' && openDrawerId) closeDrawers();
 });
 
-document.querySelectorAll('[data-rock-src]').forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    document.querySelectorAll('[data-rock-src]').forEach(t=>{
-      t.classList.toggle('active', t === tab);
-      t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
-    });
-    rockIframe.src = tab.getAttribute('data-rock-src');
-  });
-});
 </script>
 </body>
 </html>
