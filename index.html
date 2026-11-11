@@ -73,6 +73,14 @@
       .main{padding:18px}
       body{padding:12px}
     }
+
+    /* Cosmic Equity Steward — same footer row as 18 Plus (radio-station mark) */
+    .sitefoot{max-width:1200px;margin:28px auto 0;padding:18px 0 8px;border-top:1px solid #1e3a4a}
+    .stewardfoot{display:flex;align-items:center;gap:12px;margin:0 0 16px}
+    .stewardfoot picture{flex:none;display:block;line-height:0}
+    .stewardmark{width:72px;height:auto;flex:none}
+    .stewardby{margin:0;font-weight:600;line-height:1.35;color:#e0e0ff}
+    @media(max-width:600px){.stewardfoot{gap:10px}.stewardmark{width:64px}}
 </style>
 </head>
 <body>
@@ -150,6 +158,16 @@
     <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
   </div>
 </div>
+
+<footer class="sitefoot">
+  <div class="stewardfoot">
+    <picture>
+      <source type="image/webp" srcset="assets/steward-mark-128.webp 128w, assets/steward-mark.webp 256w" sizes="(max-width: 600px) 64px, 72px">
+      <img class="stewardmark" src="assets/steward-mark-128.png" srcset="assets/steward-mark-128.png 128w, assets/steward-mark.png 256w" sizes="(max-width: 600px) 64px, 72px" width="72" height="89" alt="The Cosmic Equity Steward">
+    </picture>
+    <p class="stewardby">Ronnie Patterson — Cosmic Equity Steward</p>
+  </div>
+</footer>
 
 <!-- Backdrop -->
 <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
